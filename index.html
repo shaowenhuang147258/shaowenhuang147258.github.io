@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>黄少文 — 电商产品视觉设计师</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f5f5;
+      --grey: #888;
+      --light-grey: #e0e0e0;
+      --font-main: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ========== Cursor ========== */
+    .cursor {
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--black);
+      border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9999;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor.active {
+      transform: translate(-50%, -50%) scale(2.5);
+      background: var(--white);
+    }
+
+    /* ========== Navigation ========== */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 100; padding: 2rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    nav .logo {
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--white); cursor: pointer;
+    }
+
+    nav .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+
+    nav .nav-links a {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--white); position: relative; padding-bottom: 2px; cursor: pointer;
+    }
+
+    nav .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px; background: var(--white);
+      transition: width 0.3s ease;
+    }
+
+    nav .nav-links a:hover::after { width: 100%; }
+
+    /* ========== View System ========== */
+    .view {
+      display: none;
+      animation: viewIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .view.active { display: block; }
+
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== Home: Hero ========== */
+    .hero {
+      height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 0 3rem;
+      background: var(--black); color: var(--white);
+      position: relative; overflow: hidden;
+    }
+
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+
+    .hero-particles {
+      position: absolute; inset: 0;
+      z-index: 0; pointer-events: none;
+    }
+
+    .hero-particles canvas {
+      width: 100%; height: 100%;
+    }
+
+    .hero-title { position: relative; z-index: 1; }
+
+    .hero-deco { display: none; }
+
+    .hero-role-line { display: none; }
+
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 9rem);
+      font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+    }
+
+    .hero-title .line { display: block; overflow: hidden; }
+
+    .hero-title .line span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hero-title .line:nth-child(2) span { animation-delay: 0.12s; }
+    .hero-title .line:nth-child(3) span { animation-delay: 0.24s; }
+
+    @keyframes slideUp { to { transform: translateY(0); } }
+
+    .hero-sub {
+      margin-top: 2rem; font-size: 0.85rem;
+      letter-spacing: 0.08em; color: var(--grey);
+      opacity: 0; animation: fadeIn 1s 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 3rem;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--grey);
+      display: flex; align-items: center; gap: 0.8rem;
+      opacity: 0; animation: fadeIn 1s 1s ease forwards;
+    }
+
+    .scroll-hint .line-anim {
+      width: 40px; height: 1px; background: var(--grey);
+      position: relative; overflow: hidden;
+    }
+
+    .scroll-hint .line-anim::after {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%; background: var(--white);
+      animation: moveLine 2s ease infinite;
+    }
+
+    @keyframes moveLine {
+      0% { left: -100%; } 50% { left: 0; } 100% { left: 100%; }
+    }
+
+    /* ========== Home: Section Common ========== */
+    section { padding: 8rem 3rem; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--grey); margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--light-grey), transparent);
+    }
+
+    .marquee-strip {
+      overflow: hidden;
+      padding: 0 0 8rem;
+      background: var(--white);
+    }
+
+    .marquee-track {
+      display: flex; gap: 4rem;
+      animation: marquee 30s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-track span {
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #f0f0f0;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+    }
+
+    .marquee-track span:hover { color: #ddd; }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ========== Home: Projects ========== */
+    .projects { background: var(--white); }
+
+    .project-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .project-item {
+      display: flex; flex-direction: column;
+      cursor: pointer;
+      transition: none;
+      padding: 0;
+      border: 1px solid #e5e5e5;
+      background: #fff;
+    }
+
+    .project-item:first-child { border-top: 1px solid #e5e5e5; }
+
+    .project-item .project-info {
+      transition: none;
+      padding: 1.5rem;
+      order: 2;
+    }
+
+    .project-item:hover .project-info { transform: none; }
+
+    .project-item .project-number {
+      transition: color 0.3s ease;
+      font-size: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+    .project-item:hover .project-number { color: var(--black); }
+
+    .project-item .project-name {
+      transition: color 0.3s ease;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+    .project-item:hover .project-name { color: var(--black); }
+
+    .project-item .project-desc {
+      transition: color 0.3s ease;
+      font-size: 0.75rem;
+      color: #999;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .project-item:hover .project-desc { color: #666; }
+
+    .project-item .project-arrow { display: none; }
+
+    .project-item .project-meta span {
+      transition: color 0.3s ease;
+      font-size: 0.6rem;
+    }
+    .project-item:hover .project-meta span { color: var(--black); }
+
+    /* 非hover项目淡出 */
+    .project-list:hover .project-item { opacity: 0.3; transition: opacity 0.4s ease; }
+    .project-list:hover .project-item:hover { opacity: 1; }
+
+    .project-cover {
+      width: 100%; aspect-ratio: 1/1;
+      overflow: hidden; position: relative;
+      order: 1;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .project-cover img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+    }
+
+    .project-item:hover .project-cover img {
+      transform: scale(1.08);
+    }
+
+    .project-list:hover .project-item .project-cover img {
+      filter: grayscale(70%) brightness(0.85);
+    }
+
+    .project-list:hover .project-item:hover .project-cover img {
+      filter: none;
+      transform: scale(1.08);
+    }
+
+    .project-cover::after {
+      content: ''; position: absolute; inset: 0;
+      background: transparent;
+      transition: background 0.6s ease;
+      pointer-events: none;
+    }
+
+    .project-list:hover .project-item .project-cover::after {
+      background: rgba(0,0,0,0.06);
+    }
+
+    .project-list:hover .project-item:hover .project-cover::after {
+      background: transparent;
+    }
+
+    .project-info { display: flex; flex-direction: column; justify-content: center; }
+
+    .project-number {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.7rem; color: var(--grey); margin-bottom: 1rem; letter-spacing: 0.05em;
+    }
+
+    .project-name {
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1rem;
+    }
+
+    .project-desc { font-size: 0.85rem; color: var(--grey); line-height: 1.7; max-width: 400px; }
+
+    .project-meta {
+      display: flex; gap: 2rem; margin-top: 1.5rem;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey);
+    }
+
+    .project-arrow { font-size: 1.5rem; }
+
+    /* ========== Home: Skills ========== */
+    .skills { background: var(--black); color: var(--white); }
+
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: #222;
+    }
+
+    .skill-cell {
+      background: var(--black); padding: 3rem 2rem;
+      transition: background 0.4s ease;
+    }
+
+    .skill-cell:hover { background: #111; }
+
+    .skill-category {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--grey); margin-bottom: 1.5rem;
+    }
+
+    .skill-name { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+
+    .skill-detail { font-size: 0.75rem; color: var(--grey); line-height: 1.6; }
+
+    /* ========== Home: Experience ========== */
+    .experience { background: var(--white); }
+
+    .exp-list { max-width: 900px; }
+
+    .exp-item {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 2rem; padding: 2.5rem 0;
+      border-bottom: 1px solid var(--light-grey);
+    }
+
+    .exp-item:first-child { border-top: 1px solid var(--light-grey); }
+
+    .exp-year {
+      font-family: 'SF Mono', monospace;
+      font-size: 0.75rem; color: var(--grey); letter-spacing: 0.05em; padding-top: 0.2rem;
+    }
+
+    .exp-content h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; }
+
+    .exp-content .exp-company { font-size: 0.85rem; color: var(--grey); margin-bottom: 0.8rem; }
+
+    .exp-content p { font-size: 0.8rem; color: #666; line-height: 1.7; }
+
+    /* ========== Home: Contact ========== */
+    .contact {
+      background: var(--black); color: var(--white);
+      min-height: 80vh;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .contact-heading {
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 3rem;
+    }
+
+    .contact-heading a { position: relative; display: inline-block; }
+
+    .contact-heading a::after {
+      content: ''; position: absolute; bottom: 0.05em; left: 0;
+      width: 100%; height: 0.08em; background: var(--white);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .contact-heading a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    .contact-links { display: flex; gap: 3rem; flex-wrap: wrap; }
+
+    .contact-link {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--grey); transition: color 0.3s ease;
+    }
+
+    .contact-link:hover { color: var(--white); }
+
+    /* ========== Home: Footer ========== */
+    footer {
+      padding: 2rem 3rem;
+      background: var(--black); color: var(--grey);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+      border-top: 1px solid #222;
+    }
+
+    /* ========== Project Detail ========== */
+    .project-detail { background: var(--white); }
+
+    .detail-hero {
+      min-height: 100vh;
+      background: var(--black); color: var(--white);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 3rem 4rem; position: relative;
+    }
+
+    .detail-meta-top {
+      position: absolute; top: 8rem; left: 3rem;
+      display: flex; gap: 3rem;
+    }
+
+    .meta-item { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .meta-label {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey);
+    }
+
+    .meta-value { font-size: 0.8rem; letter-spacing: 0.05em; }
+
+    .detail-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+    }
+
+    .detail-title .line { display: block; overflow: hidden; }
+
+    .detail-title .line span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .detail-title .line:nth-child(2) span { animation-delay: 0.1s; }
+
+    .detail-subtitle {
+      font-size: 1rem; color: var(--grey);
+      margin-top: 1.5rem; max-width: 500px; line-height: 1.7;
+      opacity: 0; animation: fadeIn 1s 0.4s ease forwards;
+    }
+
+    .back-btn {
+      position: fixed; top: 2rem; left: 3rem; z-index: 100;
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--white);
+      display: flex; align-items: center; gap: 0.6rem;
+      cursor: pointer; mix-blend-mode: difference;
+      transition: opacity 0.3s ease;
+    }
+
+    .back-btn:hover { opacity: 0.6; }
+
+    .back-btn .back-arrow {
+      display: inline-block; transition: transform 0.3s ease;
+    }
+
+    .back-btn:hover .back-arrow { transform: translateX(-4px); }
+
+    /* ========== Gallery ========== */
+    .gallery { background: var(--white); }
+
+    .gallery-section {
+      padding: 2rem 3rem;
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gallery-section.visible { opacity: 1; transform: translateY(0); }
+
+    .full-img { width: 100%; }
+    .full-img img { width: 100%; height: auto; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .two-col img { width: 100%; height: auto; }
+
+    .offset-layout {
+      display: grid; grid-template-columns: 1.2fr 0.8fr;
+      gap: 4rem; align-items: center; padding: 4rem 3rem;
+    }
+
+    .offset-layout.reverse { grid-template-columns: 0.8fr 1.2fr; }
+    .offset-layout.reverse .offset-img { order: 2; }
+    .offset-layout.reverse .offset-text { order: 1; }
+
+    .offset-img img { width: 100%; height: auto; }
+
+    .offset-text { max-width: 400px; }
+
+    .offset-text .feature-tag {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--grey); margin-bottom: 1rem;
+    }
+
+    .offset-text h3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.2rem;
+    }
+
+    .offset-text p { font-size: 0.85rem; color: #666; line-height: 1.8; }
+
+    .gallery-section.dark { background: var(--black); color: var(--white); }
+    .gallery-section.dark .offset-text p { color: var(--grey); }
+
+    /* ========== Section Divider ========== */
+    .section-divider {
+      padding: 6rem 3rem 2rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+
+    .section-divider .divider-line { flex: 1; height: 1px; background: var(--light-grey); }
+
+    .section-divider .divider-label {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--grey); white-space: nowrap;
+    }
+
+    .section-divider.dark { background: var(--black); }
+    .section-divider.dark .divider-line { background: #333; }
+
+    /* ========== A+ Placeholder ========== */
+    .aplus-placeholder {
+      background: #0e0e0e; color: var(--grey);
+      padding: 8rem 3rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; min-height: 50vh;
+    }
+
+    .aplus-placeholder .aplus-tag {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: #444; margin-bottom: 2rem;
+    }
+
+    .aplus-placeholder .aplus-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800; color: #222;
+      letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+
+    .aplus-placeholder .aplus-dash { width: 40px; height: 2px; background: #333; margin: 2rem 0; }
+    .aplus-placeholder .aplus-sub { font-size: 0.85rem; color: #555; letter-spacing: 0.05em; }
+
+    /* ========== Project Nav ========== */
+    .project-nav {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--light-grey);
+    }
+
+    .project-nav a {
+      padding: 4rem 3rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      transition: background 0.4s ease; cursor: pointer;
+    }
+
+    .project-nav a:first-child { border-right: 1px solid var(--light-grey); }
+    .project-nav a:hover { background: #f0f0f0; }
+
+    .nav-direction {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey);
+    }
+
+    .nav-project-name { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem 1.5rem; }
+      nav .nav-links { gap: 1.5rem; }
+      section { padding: 5rem 1.5rem; }
+      .hero { padding: 0 1.5rem; }
+      .detail-hero { padding: 0 1.5rem 3rem; min-height: 80vh; }
+      .detail-meta-top { top: 6rem; left: 1.5rem; gap: 1.5rem; flex-wrap: wrap; }
+      .gallery-section { padding: 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 1rem; }
+      .offset-layout,
+      .offset-layout.reverse {
+        grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem;
+      }
+      .offset-layout.reverse .offset-img { order: 0; }
+      .offset-layout.reverse .offset-text { order: 0; }
+      .offset-text { max-width: 100%; }
+      .project-item {
+        grid-template-columns: 1fr; gap: 1.5rem; padding: 2.5rem 0;
+      }
+      .project-cover { order: -1; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .contact { min-height: 60vh; }
+      .contact-links { gap: 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .project-nav { grid-template-columns: 1fr; }
+      .project-nav a:first-child { border-right: none; border-bottom: 1px solid var(--light-grey); }
+      .back-btn { top: 1.5rem; left: 1.5rem; }
+      .section-divider { padding: 4rem 1.5rem 1.5rem; }
+      .aplus-placeholder { padding: 5rem 1.5rem; min-height: 40vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- ==================== HOME VIEW ==================== -->
+  <div class="view active" id="view-home">
+
+    <nav>
+      <div class="logo">SHAOWEN</div>
+      <ul class="nav-links">
+        <li><a onclick="scrollToSection('projects')">Projects</a></li>
+        <li><a onclick="scrollToSection('skills')">Skills</a></li>
+        <li><a onclick="scrollToSection('experience')">Experience</a></li>
+        <li><a onclick="scrollToSection('contact')">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-particles"><canvas id="particleCanvas"></canvas></div>
+      <h1 class="hero-title">
+        <span class="line"><span>黄少文</span></span>
+        <span class="line"><span>Design</span></span>
+      </h1>
+      <p class="hero-sub">电商产品视觉设计师 · 亚马逊 A+ 全链路转化</p>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="line-anim"></div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-strip">
+      <div class="marquee-track">
+        <span>Product Visual</span><span>·</span>
+        <span>Amazon A+</span><span>·</span>
+        <span>3D Rendering</span><span>·</span>
+        <span>AIGC Workflow</span><span>·</span>
+        <span>Keyshot</span><span>·</span>
+        <span>Blender</span><span>·</span>
+        <span>Product Visual</span><span>·</span>
+        <span>Amazon A+</span><span>·</span>
+        <span>3D Rendering</span><span>·</span>
+        <span>AIGC Workflow</span><span>·</span>
+        <span>Keyshot</span><span>·</span>
+        <span>Blender</span><span>·</span>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <section class="projects" id="projects">
+      <div class="section-label">Selected Projects</div>
+      <div class="project-list">
+
+        <div class="project-item" onclick="showProject('blower')">
+          <div class="project-cover">
+            <img src="https://www.coze.cn/s/WCr7mJLavZY/" alt="Houselife 吹吸一体机">
+          </div>
+          <div class="project-info">
+            <span class="project-number">01</span>
+            <h2 class="project-name">Houselife 无刷吹吸一体机</h2>
+            <p class="project-desc">为 Houselife 品牌打造全套产品视觉系统，涵盖白底产品图、功能海报与多场景展示。</p>
+            <div class="project-meta">
+              <span>产品视觉</span>
+              <span>2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-item" onclick="showProject('ratchet')">
+          <div class="project-cover">
+            <img src="https://www.coze.cn/s/gx8ZjsZYg04/" alt="Houselife 棘轮扳手">
+          </div>
+          <div class="project-info">
+            <span class="project-number">02</span>
+            <h2 class="project-name">Houselife 无绳棘轮扳手</h2>
+            <p class="project-desc">为 Houselife 棘轮扳手打造电商视觉系统，涵盖主图、功能海报及 A+ 详情页。</p>
+            <div class="project-meta">
+              <span>产品视觉</span>
+              <span>2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-item" onclick="showProject('tiller')">
+          <div class="project-cover">
+            <img src="https://www.coze.cn/s/NmTaelPLRp8/" alt="Houselife 电动松土机">
+          </div>
+          <div class="project-info">
+            <span class="project-number">03</span>
+            <h2 class="project-name">Houselife 电动松土机</h2>
+            <p class="project-desc">为 Houselife 电动松土机打造电商视觉系统，涵盖白底产品图、功能卖点海报及多场景展示。</p>
+            <div class="project-meta">
+              <span>产品视觉</span>
+              <span>2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-item">
+          <div class="project-cover">
+            <div style="width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#ccc;">Coming Soon</div>
+          </div>
+          <div class="project-info">
+            <span class="project-number">04</span>
+            <h2 class="project-name">更多项目</h2>
+            <p class="project-desc">持续更新中…</p>
+            <div class="project-meta">
+              <span>Stay Tuned</span>
+              <span>2026</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="skills" id="skills">
+      <div class="section-label">Capabilities</div>
+      <div class="skills-grid">
+        <div class="skill-cell"><div class="skill-category">Core</div><div class="skill-name">亚马逊 A+ 视觉</div><div class="skill-detail">高转化详情页设计 · A+ Content · 品牌故事</div></div>
+        <div class="skill-cell"><div class="skill-category">Core</div><div class="skill-name">电商全链路视觉</div><div class="skill-detail">主图 / 详情页 / A+ / 品牌旗舰店 / 广告素材</div></div>
+        <div class="skill-cell"><div class="skill-category">3D</div><div class="skill-name">3D 产品渲染</div><div class="skill-detail">Keyshot / Blender · 产品建模与场景渲染</div></div>
+        <div class="skill-cell"><div class="skill-category">AI</div><div class="skill-name">AIGC 融合工作流</div><div class="skill-detail">AI 生成 + 人工精修 · 降本增效创意生产</div></div>
+        <div class="skill-cell"><div class="skill-category">Video</div><div class="skill-name">动态视觉</div><div class="skill-detail">Ae / 达芬奇 · 产品视频与广告动效</div></div>
+        <div class="skill-cell"><div class="skill-category">Tools</div><div class="skill-name">工具栈</div><div class="skill-detail">PS / nanobanana / Keyshot / Blender / Ae / 达芬奇</div></div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="experience" id="experience">
+      <div class="section-label">Experience</div>
+      <div class="exp-list">
+        <div class="exp-item"><span class="exp-year">2024.03 — 2025.09</span><div class="exp-content"><h3>视觉设计师</h3><div class="exp-company">苏州星禾领创国际贸易有限公司 · 设计部</div><p>负责亚马逊平台产品视觉设计，涵盖主图、A+ 详情页、品牌旗舰店及广告素材，成功打造多款市场热销爆单产品。</p></div></div>
+        <div class="exp-item"><span class="exp-year">2023.07 — 2024.01</span><div class="exp-content"><h3>后期制作</h3><div class="exp-company">宿迁匠仁影视文化传媒有限公司</div><p>负责影视后期剪辑、包装与字幕制作，培养了对画面节奏与视觉叙事的敏锐判断力。</p></div></div>
+        <div class="exp-item"><span class="exp-year">2023.06 — 2023.07</span><div class="exp-content"><h3>后期制作（实习）</h3><div class="exp-company">宿迁匠仁影视文化传媒有限公司 · 影视部</div><p>担任导演、剪辑与包装，从创意到成片全流程实践，打下视觉表达的扎实基础。</p></div></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="section-label">Get in Touch</div>
+      <h2 class="contact-heading"><a href="mailto:1842787797@qq.com">Let's work<br>together<span style="color:var(--grey)">.</span></a></h2>
+      <div class="contact-links">
+        <a href="mailto:1842787797@qq.com" class="contact-link" style="font-size:1.2rem;letter-spacing:0.04em;color:var(--white);text-transform:none;display:flex;align-items:center;gap:0.7rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+          1842787797@qq.com
+        </a>
+        <a href="tel:19826098290" class="contact-link" style="font-size:1.2rem;letter-spacing:0.04em;color:var(--white);text-transform:none;display:flex;align-items:center;gap:0.7rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          19826098290
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 黄少文</span>
+      <span>Designed with intention</span>
+    </footer>
+
+  </div>
+
+  <!-- ==================== BLOWER PROJECT ==================== -->
+  <div class="view" id="view-blower">
+
+    <div class="back-btn" onclick="showHome()">
+      <span class="back-arrow">←</span>
+      <span>All Projects</span>
+    </div>
+
+    <section class="detail-hero">
+      <div class="detail-meta-top">
+        <div class="meta-item"><span class="meta-label">Client</span><span class="meta-value">Houselife</span></div>
+        <div class="meta-item"><span class="meta-label">Year</span><span class="meta-value">2024</span></div>
+        <div class="meta-item"><span class="meta-label">Scope</span><span class="meta-value">主图设计 · 功能海报 · A+页面</span></div>
+      </div>
+      <h1 class="detail-title">
+        <span class="line"><span>Houselife</span></span>
+        <span class="line"><span>Cordless Blower</span></span>
+      </h1>
+      <p class="detail-subtitle">为 Houselife 无刷吹吸一体机打造电商视觉系统，涵盖白底主图、功能卖点海报及 A+ 详情页，完整呈现产品性能与多场景应用。</p>
+    </section>
+
+    <div class="gallery">
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/ElyPu5SA4WM/" alt="产品主图" loading="lazy"></div></div>
+      <div class="gallery-section"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/JgznNJ1dnQI/" alt="兼容DeWalt电池" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 01</div><h3>兼容 DeWalt 20V 电池</h3><p>无缝适配得伟 20V MAX 电池生态，沿用现有工具电池，降低使用门槛，提升续航效率。</p></div></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/DviJ19xrtXY/" alt="升级无刷电机" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 02</div><h3>升级无刷电机</h3><p>800000 RPM 超高转速，450 CFM 最大风量，150 MPH 极限风速，硬核参数支撑强劲性能。</p></div></div></div>
+      <div class="gallery-section"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/H6bZqsaoj68/" alt="无级变速" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 03</div><h3>无级变速控制</h3><p>按压即调风力大小，从轻柔到强劲自由掌控，不同场景匹配不同风量，精准高效。</p></div></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/Eq2jsQ3c22I/" alt="吹吸二合一" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 04</div><h3>吹吸二合一</h3><p>一机两用，吹风与吸尘模式自由切换。强劲吸力应对车内缝隙、沙发明角等清洁死角，全能覆盖。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/FEEhvuGc_LA/" alt="内置LED灯" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 05</div><h3>内置 LED 照明</h3><p>照亮狭窄暗角，柜体内部、车底暗处也能清晰作业，让清洁不再受光线限制。</p></div></div></div>
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/EHUibKNumaA/" alt="多场景应用" loading="lazy"></div></div>
+    </div>
+
+    <div class="section-divider dark"><span class="divider-label">主图 Main Images</span><div class="divider-line"></div><span class="divider-label">A+ Content</span></div>
+
+    <div class="aplus-placeholder"><div class="aplus-tag">Coming Next</div><div class="aplus-title">A+ Detail Page</div><div class="aplus-dash"></div><div class="aplus-sub">A+ 页面内容即将补充</div></div>
+
+    <div class="project-nav">
+      <a onclick="showHome()"><span class="nav-direction">← Previous</span><span class="nav-project-name">Back to Portfolio</span></a>
+      <a onclick="showProject('ratchet')"><span class="nav-direction">Next →</span><span class="nav-project-name">Houselife 无绳棘轮扳手</span></a>
+    </div>
+
+  </div>
+
+  <!-- ==================== RATCHET PROJECT ==================== -->
+  <div class="view" id="view-ratchet">
+
+    <div class="back-btn" onclick="showHome()">
+      <span class="back-arrow">←</span>
+      <span>All Projects</span>
+    </div>
+
+    <section class="detail-hero">
+      <div class="detail-meta-top">
+        <div class="meta-item"><span class="meta-label">Client</span><span class="meta-value">Houselife</span></div>
+        <div class="meta-item"><span class="meta-label">Year</span><span class="meta-value">2024</span></div>
+        <div class="meta-item"><span class="meta-label">Scope</span><span class="meta-value">主图设计 · 功能海报 · A+页面</span></div>
+      </div>
+      <h1 class="detail-title">
+        <span class="line"><span>Houselife</span></span>
+        <span class="line"><span>Ratchet Wrench</span></span>
+      </h1>
+      <p class="detail-subtitle">为 Houselife 无绳棘轮扳手打造电商视觉系统，涵盖白底主图、功能卖点海报及 A+ 详情页，完整呈现产品性能与多场景应用。</p>
+    </section>
+
+    <div class="gallery">
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/fVDXZygxqM0/" alt="棘轮扳手产品主图" loading="lazy"></div></div>
+      <div class="gallery-section"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/gx8ZjsZYg04/" alt="兼容DeWalt电池" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 01</div><h3>兼容 DeWalt 20V 电池</h3><p>无缝适配得伟 20V MAX 电池生态，沿用现有工具电池，降低使用门槛，提升续航效率。</p></div></div></div>
+      <div class="gallery-section"><div class="two-col"><img src="https://www.coze.cn/s/fSSd1DnXnOg/" alt="3/8英寸快换" loading="lazy"><img src="https://www.coze.cn/s/iwtv2JZsK40/" alt="20V升级电机" loading="lazy"></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/jmR5vQ4VY58/" alt="无级调速" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 02</div><h3>无级调速扳机</h3><p>按压力度决定转速，0-400 RPM 自由掌控，配合锁止开关，长时间作业更省力。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/eMPN6zuVTsI/" alt="正反转切换" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 03</div><h3>正反转一键切换</h3><p>Forward 拧紧、Reverse 松开，旋钮式档位切换，操作直觉高效，无需换手。</p></div></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/fzQfe1XlG6I/" alt="内置LED灯" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 04</div><h3>内置 LED 照明</h3><p>暗角、引擎舱深处也能清晰作业，灯光自动随扳手启动，告别盲操。</p></div></div></div>
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/glZK7veqkbo/" alt="多场景应用" loading="lazy"></div></div>
+    </div>
+
+    <div class="section-divider dark"><span class="divider-label">主图 Main Images</span><div class="divider-line"></div><span class="divider-label">A+ Content</span></div>
+
+    <div class="gallery" style="background:#0e0e0e;">
+      <div class="gallery-section dark"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/w6qNgUc2faE/" alt="双向散热" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Durability</div><h3>双向散热系统</h3><p>双向通风设计有效防止电机过热，延长电机使用寿命，长时间高负荷作业依然稳定输出。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/sicN1GvilT0/" alt="20V强劲电机" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Performance</div><h3>20V 强劲电机</h3><p>升级 20V 无刷电机，最大扭矩 89FT-LBS (120N·m)，较传统工具提升 80% 动力、70% 效率。</p></div></div></div>
+      <div class="gallery-section dark"><div class="full-img"><img src="https://www.coze.cn/s/ohXq8hbMOxE/" alt="产品总览" loading="lazy"></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/zhXGfwERnIA/" alt="内置LED灯" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Visibility</div><h3>内置 LED 照明</h3><p>工作灯随启动自动亮起，照亮发动机舱、底盘暗角等狭窄空间。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/zFq8-UNz5OM/" alt="安全锁开关" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Safety</div><h3>安全锁开关</h3><p>防止误触启动，搬运与存放更安心，专为工业级使用场景设计的安全防护。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/wdQO1hivijg/" alt="无级调速" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Control</div><h3>无级调速扳机</h3><p>按压力度线性控制 0-400 RPM 转速，精细作业与快速拧紧自由切换。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/yETVmceNH8Q/" alt="正反转切换" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Versatility</div><h3>正反转一键切换</h3><p>Forward 拧紧、Reverse 松开，旋钮式切换操作直觉高效。</p></div></div></div>
+      <div class="gallery-section dark"><div class="full-img"><img src="https://www.coze.cn/s/yj-URqIB_m4/" alt="手动 VS 电动对比" loading="lazy"></div></div>
+      <div class="gallery-section dark"><div class="two-col"><img src="https://www.coze.cn/s/xEZLln_mKuI/" alt="自行车维修场景" loading="lazy"><img src="https://www.coze.cn/s/wWh-ArQ0FPo/" alt="重型机械场景" loading="lazy"></div></div>
+    </div>
+
+    <div class="project-nav">
+      <a onclick="showProject('blower')"><span class="nav-direction">← Previous</span><span class="nav-project-name">Houselife 吹吸一体机</span></a>
+      <a onclick="showProject('tiller')"><span class="nav-direction">Next →</span><span class="nav-project-name">Houselife 电动松土机</span></a>
+    </div>
+
+  </div>
+
+  <!-- ==================== TILLER PROJECT ==================== -->
+  <div class="view" id="view-tiller">
+
+    <div class="back-btn" onclick="showHome()">
+      <span class="back-arrow">←</span>
+      <span>All Projects</span>
+    </div>
+
+    <section class="detail-hero">
+      <div class="detail-meta-top">
+        <div class="meta-item"><span class="meta-label">Client</span><span class="meta-value">Houselife</span></div>
+        <div class="meta-item"><span class="meta-label">Year</span><span class="meta-value">2024</span></div>
+        <div class="meta-item"><span class="meta-label">Scope</span><span class="meta-value">主图设计 · 功能海报 · A+页面</span></div>
+      </div>
+      <h1 class="detail-title">
+        <span class="line"><span>Houselife</span></span>
+        <span class="line"><span>Electric Tiller</span></span>
+      </h1>
+      <p class="detail-subtitle">为 Houselife 电动松土机打造电商视觉系统，涵盖白底主图、功能卖点海报及 A+ 详情页，完整呈现产品性能与多场景应用。</p>
+    </section>
+
+    <div class="gallery">
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/xxiwRM9qf1E/" alt="松土机产品主图" loading="lazy"></div></div>
+      <div class="gallery-section"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/13tJuYAy2-E/" alt="兼容DeWalt电池" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 01</div><h3>兼容 DeWalt 20V 电池</h3><p>无缝适配得伟 20V MAX 锂电池生态，沿用现有工具电池，降低使用门槛，多工具共享续航。</p></div></div></div>
+      <div class="gallery-section"><div class="two-col"><img src="https://www.coze.cn/s/x2zkEENgi48/" alt="翻耕9寸宽7寸深" loading="lazy"><img src="https://www.coze.cn/s/1UfzJ_b_NiY/" alt="高扭矩铜电机" loading="lazy"></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/3eafMFwMmrs/" alt="4×12高碳钢刀片" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 02</div><h3>4×12 高碳钢刀片</h3><p>4组共12片高碳钢旋耕刀，专为硬土与碎石地形设计，快速翻耕、强力粉碎、精细碎土、防缠绕四重保障。</p></div></div></div>
+      <div class="gallery-section dark"><div class="offset-layout"><div class="offset-img"><img src="https://www.coze.cn/s/yF9RjBfgM3c/" alt="免工具换刀" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 03</div><h3>免工具换刀设计</h3><p>拉动中心金属环即可释放刀盘，无需扳手等额外工具，维护更换一步到位，省时省力。</p></div></div></div>
+      <div class="gallery-section"><div class="offset-layout reverse"><div class="offset-img"><img src="https://www.coze.cn/s/6WA4OzbiVz0/" alt="人体工学设计" loading="lazy"></div><div class="offset-text"><div class="feature-tag">Feature 04</div><h3>人体工学设计</h3><p>双握把手柄搭配可伸缩金属长杆，适配不同身高，长时间作业也能保持舒适姿态，降低疲劳感。</p></div></div></div>
+      <div class="gallery-section"><div class="full-img"><img src="https://www.coze.cn/s/9v__GYDle6Q/" alt="多场景应用" loading="lazy"></div></div>
+    </div>
+
+    <div class="section-divider dark"><span class="divider-label">主图 Main Images</span><div class="divider-line"></div><span class="divider-label">A+ Content</span></div>
+
+    <div class="aplus-placeholder"><div class="aplus-tag">Coming Next</div><div class="aplus-title">A+ Detail Page</div><div class="aplus-dash"></div><div class="aplus-sub">A+ 页面内容即将补充</div></div>
+
+    <div class="project-nav">
+      <a onclick="showProject('ratchet')"><span class="nav-direction">← Previous</span><span class="nav-project-name">Houselife 无绳棘轮扳手</span></a>
+      <a onclick="showHome()"><span class="nav-direction">Next →</span><span class="nav-project-name">Back to Portfolio</span></a>
+    </div>
+
+  </div>
+
+  <script>
+    // ========== Particle System ==========
+    (function() {
+      const canvas = document.getElementById('particleCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w, h, particles = [], mouse = { x: -9999, y: -9999 };
+      const PARTICLE_COUNT = 80;
+      const CONNECT_DIST = 150;
+      const MOUSE_DIST = 200;
+
+      function resize() {
+        const hero = canvas.parentElement.parentElement;
+        w = canvas.width = hero.offsetWidth;
+        h = canvas.height = hero.offsetHeight;
+      }
+
+      function createParticle() {
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          r: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.5 + 0.2
+        };
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(createParticle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+
+          // Mouse repulsion
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_DIST) {
+            const force = (MOUSE_DIST - dist) / MOUSE_DIST * 0.02;
+            p.vx += dx / dist * force;
+            p.vy += dy / dist * force;
+          }
+
+          // Speed limit
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > 1.5) { p.vx *= 0.98; p.vy *= 0.98; }
+
+          // Draw particle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+          ctx.fill();
+
+          // Connect nearby particles
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const ddx = p.x - p2.x;
+            const ddy = p.y - p2.y;
+            const d = Math.sqrt(ddx * ddx + ddy * ddy);
+            if (d < CONNECT_DIST) {
+              const lineAlpha = (1 - d / CONNECT_DIST) * 0.15;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(255,255,255,${lineAlpha})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', () => { resize(); });
+
+      document.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+
+      document.addEventListener('mouseleave', () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      init();
+      animate();
+    })();
+
+    // ========== View Switching ==========
+    function showProject(id) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + id).classList.add('active');
+      window.scrollTo(0, 0);
+      observeSections();
+    }
+
+    function showHome() {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-home').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ========== Scroll Reveal ==========
+    let observer;
+    function observeSections() {
+      if (observer) observer.disconnect();
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+      document.querySelectorAll('.gallery-section').forEach(el => {
+        if (!el.classList.contains('visible')) observer.observe(el);
+      });
+    }
+
+    observeSections();
+
+    // ========== Custom Cursor ==========
+    const cursor = document.getElementById('cursor');
+    let cursorVisible = false;
+
+    document.addEventListener('mousemove', (e) => {
+      if (!cursorVisible) { cursor.style.opacity = '1'; cursorVisible = true; }
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; cursorVisible = false; });
+
+    const hoverTargets = 'a, .project-item, .skill-cell, .contact-heading, .back-btn, .project-nav a';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(hoverTargets)) cursor.classList.add('active');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(hoverTargets)) cursor.classList.remove('active');
+    });
+
+    if ('ontouchstart' in window) cursor.style.display = 'none';
+
+    // ========== Stagger Animations ==========
+    document.querySelectorAll('.skill-cell').forEach((cell, i) => {
+      cell.style.transitionDelay = (i * 0.08) + 's';
+    });
+
+    document.querySelectorAll('.project-item').forEach((item, i) => {
+      item.style.transitionDelay = (i * 0.1) + 's';
+    });
+  </script>
+
+</body>
+</html>
