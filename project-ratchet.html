@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Houselife — Cordless Ratchet Wrench</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f5f5;
+      --grey: #888;
+      --light-grey: #e0e0e0;
+      --dark-grey: #333;
+      --yellow: #f5c518;
+      --font-main: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--white);
+      color: var(--black);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ========== Top Bar ========== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .top-bar .back-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .top-bar .back-link:hover { opacity: 0.6; }
+
+    .back-arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .top-bar .back-link:hover .back-arrow {
+      transform: translateX(-4px);
+    }
+
+    /* ========== Project Hero ========== */
+    .project-hero {
+      min-height: 100vh;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 4rem;
+      position: relative;
+    }
+
+    .project-meta-top {
+      position: absolute;
+      top: 8rem;
+      left: 3rem;
+      display: flex;
+      gap: 3rem;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .meta-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    .meta-value {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    .project-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .project-title .line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .project-title .line span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .project-title .line:nth-child(2) span { animation-delay: 0.1s; }
+
+    @keyframes slideUp { to { transform: translateY(0); } }
+
+    .project-subtitle {
+      font-size: 1rem;
+      color: var(--grey);
+      margin-top: 1.5rem;
+      max-width: 500px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 1s 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ========== Gallery ========== */
+    .gallery { background: var(--white); }
+
+    .gallery-section {
+      padding: 2rem 3rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gallery-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .full-img { width: 100%; }
+    .full-img img { width: 100%; height: auto; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .two-col img { width: 100%; height: auto; }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .three-col img { width: 100%; height: auto; }
+
+    /* Offset layout */
+    .offset-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 4rem;
+      align-items: center;
+      padding: 4rem 3rem;
+    }
+
+    .offset-layout.reverse {
+      grid-template-columns: 0.8fr 1.2fr;
+    }
+
+    .offset-layout.reverse .offset-img { order: 2; }
+    .offset-layout.reverse .offset-text { order: 1; }
+
+    .offset-img img { width: 100%; height: auto; }
+
+    .offset-text { max-width: 400px; }
+
+    .offset-text .feature-tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 1rem;
+    }
+
+    .offset-text h3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .offset-text p {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .gallery-section.dark {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .gallery-section.dark .offset-text p { color: var(--grey); }
+
+    /* ========== A+ Section ========== */
+    .aplus-wrap {
+      background: #0e0e0e;
+    }
+
+    .aplus-section {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .aplus-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .aplus-section + .aplus-section {
+      padding-top: 2rem;
+    }
+
+    .aplus-section:last-child {
+      padding-bottom: 6rem;
+    }
+
+    .aplus-section img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 2px;
+    }
+
+    /* ========== Section Divider ========== */
+    .section-divider {
+      padding: 6rem 3rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .section-divider .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--light-grey);
+    }
+
+    .section-divider .divider-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--grey);
+      white-space: nowrap;
+    }
+
+    .section-divider.dark {
+      background: var(--black);
+    }
+
+    .section-divider.dark .divider-line { background: #333; }
+
+    /* ========== A+ Placeholder ========== */
+    .aplus-placeholder {
+      background: #0e0e0e;
+      color: var(--grey);
+      padding: 8rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 50vh;
+    }
+
+    .aplus-placeholder .aplus-tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 2rem;
+    }
+
+    .aplus-placeholder .aplus-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800;
+      color: #222;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .aplus-placeholder .aplus-sub {
+      font-size: 0.85rem;
+      color: #555;
+      letter-spacing: 0.05em;
+    }
+
+    .aplus-placeholder .aplus-dash {
+      width: 40px;
+      height: 2px;
+      background: #333;
+      margin: 2rem 0;
+    }
+
+    /* ========== Project Nav ========== */
+    .project-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--light-grey);
+    }
+
+    .project-nav a {
+      padding: 4rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.4s ease;
+    }
+
+    .project-nav a:first-child { border-right: 1px solid var(--light-grey); }
+    .project-nav a:hover { background: #f0f0f0; }
+
+    .nav-direction {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    .nav-project-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    /* ========== Responsive ========== */
+    @media (max-width: 768px) {
+      .top-bar { padding: 1.5rem; }
+      .project-hero { padding: 0 1.5rem 3rem; min-height: 80vh; }
+      .project-meta-top { top: 6rem; left: 1.5rem; gap: 1.5rem; flex-wrap: wrap; }
+      .gallery-section { padding: 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 1rem; }
+      .three-col { grid-template-columns: 1fr; gap: 1rem; }
+      .offset-layout,
+      .offset-layout.reverse {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 3rem 1.5rem;
+      }
+      .offset-layout.reverse .offset-img { order: 0; }
+      .offset-layout.reverse .offset-text { order: 0; }
+      .offset-text { max-width: 100%; }
+      .aplus-section { padding: 0 1rem; }
+      .aplus-section + .aplus-section { padding-top: 1rem; }
+      .aplus-section:last-child { padding-bottom: 4rem; }
+      .section-divider { padding: 4rem 1.5rem 1.5rem; }
+      .aplus-placeholder { padding: 5rem 1.5rem; min-height: 40vh; }
+      .project-nav { grid-template-columns: 1fr; }
+      .project-nav a:first-child { border-right: none; border-bottom: 1px solid var(--light-grey); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <a href="https://www.coze.cn/s/7RtKtVE6UiY/" class="back-link">
+      <span class="back-arrow">←</span>
+      <span>All Projects</span>
+    </a>
+  </div>
+
+  <!-- Hero -->
+  <section class="project-hero">
+    <div class="project-meta-top">
+      <div class="meta-item">
+        <span class="meta-label">Client</span>
+        <span class="meta-value">Houselife</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Year</span>
+        <span class="meta-value">2024</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Scope</span>
+        <span class="meta-value">主图设计 · 功能海报 · A+页面</span>
+      </div>
+    </div>
+    <h1 class="project-title">
+      <span class="line"><span>Houselife</span></span>
+      <span class="line"><span>Ratchet Wrench</span></span>
+    </h1>
+    <p class="project-subtitle">为 Houselife 无绳棘轮扳手打造电商视觉系统，涵盖白底主图、功能卖点海报及 A+ 详情页，完整呈现产品性能与多场景应用。</p>
+  </section>
+
+  <!-- Gallery: 主图部分 -->
+  <div class="gallery">
+
+    <!-- 01: Product Hero — full width -->
+    <div class="gallery-section">
+      <div class="full-img">
+        <img src="https://www.coze.cn/s/fVDXZygxqM0/" alt="Houselife 棘轮扳手产品主图" loading="lazy">
+      </div>
+    </div>
+
+    <!-- 02: Battery Compatibility (offset) -->
+    <div class="gallery-section">
+      <div class="offset-layout">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/gx8ZjsZYg04/" alt="兼容DeWalt电池" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Feature 01</div>
+          <h3>兼容 DeWalt 20V 电池</h3>
+          <p>无缝适配得伟 20V MAX 电池生态，沿用现有工具电池，降低使用门槛，提升续航效率。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03+04: 3/8 Drive + Motor — two col -->
+    <div class="gallery-section">
+      <div class="two-col">
+        <img src="https://www.coze.cn/s/fSSd1DnXnOg/" alt="3/8英寸快换" loading="lazy">
+        <img src="https://www.coze.cn/s/iwtv2JZsK40/" alt="20V升级电机" loading="lazy">
+      </div>
+    </div>
+
+    <!-- 05: Variable Speed (offset reverse) -->
+    <div class="gallery-section">
+      <div class="offset-layout reverse">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/jmR5vQ4VY58/" alt="无级调速" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Feature 02</div>
+          <h3>无级调速扳机</h3>
+          <p>按压力度决定转速，0-400 RPM 自由掌控，配合锁止开关，长时间作业更省力。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06: Forward/Reverse (offset, dark) -->
+    <div class="gallery-section dark">
+      <div class="offset-layout">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/eMPN6zuVTsI/" alt="正反转切换" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Feature 03</div>
+          <h3>正反转一键切换</h3>
+          <p>Forward 拧紧、Reverse 松开，旋钮式档位切换，操作直觉高效，无需换手。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07: LED Light (offset reverse) -->
+    <div class="gallery-section">
+      <div class="offset-layout reverse">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/fzQfe1XlG6I/" alt="内置LED灯" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Feature 04</div>
+          <h3>内置 LED 照明</h3>
+          <p>暗角、引擎舱深处也能清晰作业，灯光自动随扳手启动，告别盲操。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08: Multi-scenario (full width) -->
+    <div class="gallery-section">
+      <div class="full-img">
+        <img src="https://www.coze.cn/s/glZK7veqkbo/" alt="多场景应用" loading="lazy">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Divider: 主图 / A+ -->
+  <div class="section-divider dark">
+    <span class="divider-label">主图 Main Images</span>
+    <div class="divider-line"></div>
+    <span class="divider-label">A+ Content</span>
+  </div>
+
+  <!-- A+ Content -->
+  <div class="gallery" style="background:#0e0e0e;">
+
+    <!-- A+ 01: Heat Ventilation — offset reverse -->
+    <div class="gallery-section dark">
+      <div class="offset-layout reverse">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/w6qNgUc2faE/" alt="双向散热" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Durability</div>
+          <h3>双向散热系统</h3>
+          <p>双向通风设计有效防止电机过热，延长电机使用寿命，长时间高负荷作业依然稳定输出。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 02: 20V Motor — offset -->
+    <div class="gallery-section dark">
+      <div class="offset-layout">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/sicN1GvilT0/" alt="20V强劲电机" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Performance</div>
+          <h3>20V 强劲电机</h3>
+          <p>升级 20V 无刷电机，最大扭矩 89FT-LBS (120N·m)，较传统工具提升 80% 动力、70% 效率，从容应对高强度作业。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 03: Product Overview — full width -->
+    <div class="gallery-section dark">
+      <div class="full-img">
+        <img src="https://www.coze.cn/s/ohXq8hbMOxE/" alt="20V无绳棘轮扳手产品总览" loading="lazy">
+      </div>
+    </div>
+
+    <!-- A+ 04: LED Light — offset -->
+    <div class="gallery-section dark">
+      <div class="offset-layout">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/zhXGfwERnIA/" alt="内置LED灯" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Visibility</div>
+          <h3>内置 LED 照明</h3>
+          <p>工作灯随启动自动亮起，照亮发动机舱、底盘暗角等狭窄空间，精准作业不受光线限制。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 05: Safety Lock — offset reverse -->
+    <div class="gallery-section dark">
+      <div class="offset-layout reverse">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/zFq8-UNz5OM/" alt="安全锁开关" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Safety</div>
+          <h3>安全锁开关</h3>
+          <p>防止误触启动，搬运与存放更安心，专为工业级使用场景设计的安全防护。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 06: Variable Speed — offset -->
+    <div class="gallery-section dark">
+      <div class="offset-layout">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/wdQO1hivijg/" alt="无级调速" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Control</div>
+          <h3>无级调速扳机</h3>
+          <p>按压力度线性控制 0-400 RPM 转速，精细作业与快速拧紧自由切换，操控精准到位。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 07: Forward/Reverse — offset reverse -->
+    <div class="gallery-section dark">
+      <div class="offset-layout reverse">
+        <div class="offset-img">
+          <img src="https://www.coze.cn/s/yETVmceNH8Q/" alt="正反转切换" loading="lazy">
+        </div>
+        <div class="offset-text">
+          <div class="feature-tag">Versatility</div>
+          <h3>正反转一键切换</h3>
+          <p>Forward 拧紧、Reverse 松开，旋钮式切换操作直觉高效，无需更换工具方向。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A+ 08: VS Comparison — full width -->
+    <div class="gallery-section dark">
+      <div class="full-img">
+        <img src="https://www.coze.cn/s/yj-URqIB_m4/" alt="手动 VS 电动对比" loading="lazy">
+      </div>
+    </div>
+
+    <!-- A+ 09+10: Scenarios — two col -->
+    <div class="gallery-section dark">
+      <div class="two-col">
+        <img src="https://www.coze.cn/s/xEZLln_mKuI/" alt="自行车维修场景" loading="lazy">
+        <img src="https://www.coze.cn/s/wWh-ArQ0FPo/" alt="重型机械场景" loading="lazy">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Project Nav -->
+  <div class="project-nav">
+    <a href="https://www.coze.cn/s/FDiSAUONeL4/">
+      <span class="nav-direction">← Previous</span>
+      <span class="nav-project-name">Houselife 吹吸一体机</span>
+    </a>
+    <a href="https://www.coze.cn/s/t1RAoqopCFw/">
+      <span class="nav-direction">Next →</span>
+      <span class="nav-project-name">Back to Portfolio</span>
+    </a>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.gallery-section').forEach(el => observer.observe(el));
+    document.querySelectorAll('.aplus-section').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
